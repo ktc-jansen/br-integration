@@ -1,0 +1,10 @@
+name: Post Bitrise CheckRun
+on:
+  check_run:
+    types: [completed]
+jobs:
+  post-bitrise1:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Post Bitrise CheckRun1"
+
