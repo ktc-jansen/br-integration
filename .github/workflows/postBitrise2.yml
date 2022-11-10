@@ -2,12 +2,16 @@ name: Post Bitrise CheckSuite
 on:
   check_suite:
     types: [completed]
+env:
+  TOKEN: ${{ secrets.TOKEN }}
+
 jobs:
   post-bitrise-check_suite:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Post Bitrise CheckSuite"
-      - uses: cardinalby/schedule-job-action@v1
+      - name: Schedule a Job
+        uses: cardinalby/schedule-job-action@v1
         with:
-          ghToken: 'superSecretToken'
+          ghToken: ${{ env.TOKEN }}
           templateYmlFile: '.github-scheduled-workflows/every-fives.yml'

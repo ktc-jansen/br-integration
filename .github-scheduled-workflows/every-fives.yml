@@ -2,6 +2,9 @@ name: Every Five Minutes
 on:
   schedule:
     - cron: '*/5 * * * *'
+env:
+  TOKEN: ${{ secrets.TOKEN }}
+
 jobs:
   mock-jenkins-call:
     runs-on: ubuntu-latest
@@ -10,4 +13,4 @@ jobs:
       - name: Remove scheduled job
         uses: cardinalby/unschedule-job-action@v1
         with:
-          ghToken: 'superSecretToken'
+          ghToken: ${{ env.TOKEN }}
