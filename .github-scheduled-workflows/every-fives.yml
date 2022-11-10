@@ -1,0 +1,13 @@
+name: Every Five Minutes
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+jobs:
+  mock-jenkins-call:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Runs every 5 minute, though it should run only once"
+      - name: Remove scheduled job
+        uses: cardinalby/unschedule-job-action@v1
+        with:
+          ghToken: 'superSecretToken'
