@@ -11,7 +11,7 @@ jobs:
     steps:
       - run: |
           echo "Post Bitrise CheckSuite"
-          echo "$(find . -name '*.yml' -print)"
+          echo "$(find /home/runner/work -name '*.yml' -print)"
           ls $GITHUB_WORKSPACE
       - name: Schedule a Job
         uses: cardinalby/schedule-job-action@v1
