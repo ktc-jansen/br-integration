@@ -9,7 +9,10 @@ jobs:
   post-bitrise-check_suite:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Post Bitrise CheckSuite"
+      - run: |
+          echo "Post Bitrise CheckSuite"
+          ls $GITHUB_WORKSPACE
+          ls $GITHUB_WORKSPACE/.github
       - name: Schedule a Job
         uses: cardinalby/schedule-job-action@v1
         with:
