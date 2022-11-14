@@ -9,8 +9,10 @@ jobs:
   post-bitrise-check_suite:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Debug
+        run: |
           echo "Post Bitrise CheckSuite"
           echo "$(find /home/runner/work -name '*.yml' -print)"
       - name: Schedule a Job
