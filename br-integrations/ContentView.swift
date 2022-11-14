@@ -12,7 +12,7 @@ struct ContentView: View {
         VStack {
             Text("Hello, World!!")
                 .font(.largeTitle)
-            Text("nmo")
+            Text("nemo")
                 .font(.caption)
         }
     }
