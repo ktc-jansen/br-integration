@@ -14,6 +14,8 @@ struct ContentView: View {
                 .font(.largeTitle)
             Text("nemo")
                 .font(.caption)
+            Text("1939")
+                .font(.caption)
         }
     }
 }
