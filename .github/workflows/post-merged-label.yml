@@ -3,10 +3,23 @@ on:
   pull_request:
     types:
       - closed
+env:
+  APP_SLUG: ${{ secrets.BITRISE_SLUG }}
+  BITRISE_TOKEN: ${{ secrets.BITRISE_TOKEN }}
 
 jobs:
-  if_merged:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'auto')
+  post_merged:
     runs-on: ubuntu-latest
     steps:
-    - run: echo "merged!"
+    - name: Set outputs
+      id: bitrise
+      run: echo "SLUG=${APP_SLUG};TOKEN=${BITRISE_TOKEN};" >> $GITHUB_OUTPUT
+    - name: Curl
+      run: |
+          curl -X POST \
+          -H "accept: application/json" \
+          -H "Authorization: ${{ steps.vars.outputs.TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d "{ \"build_params\": { \"workflow_id\": \"test-curl\", \"branch\": \"main\" }, \"hook_info\": { \"type\": \"bitrise\" }}" \
+          "https://api.bitrise.io/v0.1/apps/${{ steps.bitrise.outputs.SLUG }}/builds"
+
