@@ -1,25 +1,30 @@
 name: Post Merged with Label
 on:
-  pull_request:
-    types:
-      - closed
+  push
+
 env:
-  APP_SLUG: ${{ secrets.BITRISE_SLUG }}
-  BITRISE_TOKEN: ${{ secrets.BITRISE_TOKEN }}
+  TOKEN: ${{ secrets.BITRISE_TOKEN }}
+  SLUG: ${{ secrets.BITRISE_SLUG }}
+  BRANCH: main
+  WORKFLOW_ID: test-curl
 
 jobs:
   post_merged:
     runs-on: ubuntu-latest
     steps:
-    - name: Set outputs
-      id: bitrise
-      run: echo "SLUG=${APP_SLUG};TOKEN=${BITRISE_TOKEN};" >> $GITHUB_OUTPUT
-    - name: Curl
-      run: |
-          curl -X POST \
-          -H "accept: application/json" \
-          -H "Authorization: ${{ steps.vars.outputs.TOKEN }}" \
-          -H "Content-Type: application/json" \
-          -d "{ \"build_params\": { \"workflow_id\": \"test-curl\", \"branch\": \"main\" }, \"hook_info\": { \"type\": \"bitrise\" }}" \
-          "https://api.bitrise.io/v0.1/apps/${{ steps.bitrise.outputs.SLUG }}/builds"
-
+      - name: Set token
+        run: echo "TOKEN=${TOKEN}" >> $GITHUB_ENV
+      - name: Set slug
+        run: echo "SLUG=${SLUG}" >> $GITHUB_ENV
+      - name: Set branch
+        run: echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
+      - name: Set workflow_id
+        run: echo "WORKFLOW_ID=${WORKFLOW_ID}" >> $GITHUB_ENV
+      - name: Curl
+        run: |
+            curl -X POST \
+            -H "accept: application/json" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $TOKEN" \
+            -d "{ \"build_params\": { \"workflow_id\": \"$WORKFLOW_ID\", \"branch\": \"$BRANCH\" }, \"hook_info\": { \"type\": \"bitrise\" }}" \
+            "https://api.bitrise.io/v0.1/apps/$SLUG/builds"
