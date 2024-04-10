@@ -8,18 +8,20 @@ on:
 
 jobs:
   assign_assignee:
-    # if: github.event_name == 'issues' || github.event_name == 'pull_request'
-    # This job will run only if (issue or pull_request is opened or edited) and assignee is not set
-    if: (github.event_name == 'issues' || github.event_name == 'pull_request') && !contains(github.event.issue.assignees.*.login, 'hkusu')
+    # This job will run only if (issue or pull_request is opened or edited) and assignees is empty
+    if: (github.event_name == 'issues' || github.event_name == 'pull_request') && github.event.action == 'opened' && github.event.assignee == null
     runs-on: ubuntu-latest
     steps:
-      - uses: hkusu/review-assign-action@v1
+      - uses: wow-actions/auto-assign@v3
         with:
-          assignees: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          assignees: |
+            ${{ github.actor }}
+          numberOfAssignees: 1
+          addReviewers: false
   link_issue:
-    # if: github.event_name == 'pull_request'
     # This job will run only if (pull request is opened or edited) and issue is not linked
-    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.body, '/#')
+    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.body, '#### Issue')
     runs-on: ubuntu-latest
     steps:
       - uses: tkt-actions/add-issue-links@v1.8.1
