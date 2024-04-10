@@ -1,0 +1,31 @@
+name: Default Assignee (Set default assignee and link issue)
+
+on:
+  issues:
+    types: [opened, edited]
+  pull_request:
+    types: [opened]
+
+jobs:
+  assign_assignee:
+    # if: github.event_name == 'issues' || github.event_name == 'pull_request'
+    # This job will run only if (issue or pull_request is opened or edited) and assignee is not set
+    if: (github.event_name == 'issues' || github.event_name == 'pull_request') && !contains(github.event.issue.assignees.*.login, 'hkusu')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hkusu/review-assign-action@v1
+        with:
+          assignees: ${{ github.actor }}
+  link_issue:
+    # if: github.event_name == 'pull_request'
+    # This job will run only if (pull request is opened or edited) and issue is not linked
+    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.body, '/#')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tkt-actions/add-issue-links@v1.8.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          branch-prefix: '/#'
+          header: '#### Issue'
+          position: 'top'
+
